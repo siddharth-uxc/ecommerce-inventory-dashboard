@@ -37,3 +37,16 @@ print("\n" + "=" * 50)
 print("OUT OF STOCK")
 print("=" * 50)
 print(df["outOfStock"].value_counts())
+
+rows_before = df.shape[0]
+print(f"Rows before cleaning: {rows_before}")
+
+df= df.drop_duplicates()
+
+rows_after = df.shape[0]
+print(f"Rows after cleaning: {rows_after}")
+
+duplicates_removed = rows_before - rows_after
+print(f"Duplicates removed: {duplicates_removed}")
+
+df.to_csv("data/zepto_cleaned.csv", index=False)
