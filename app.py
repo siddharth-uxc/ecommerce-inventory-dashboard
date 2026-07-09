@@ -1,7 +1,7 @@
 import pandas as pd
 
 # Load dataset
-df = pd.read_csv("data/zepto_v2.csv", encoding="latin1")
+df = pd.read_csv("data/zepto_cleaned.csv")
 
 print(df.head())
 
@@ -50,3 +50,23 @@ duplicates_removed = rows_before - rows_after
 print(f"Duplicates removed: {duplicates_removed}")
 
 df.to_csv("data/zepto_cleaned.csv", index=False)
+
+print("\n" + "=" * 50)
+print("Product count by category")
+print("=" * 50)
+ 
+category_counts = df["Category"].value_counts()
+print(category_counts)
+
+
+
+print("\n" + "=" * 50)
+print("TOP 10 PRODUCTS BY MRP")
+print("=" * 50)
+
+top_mrp_products = df.sort_values(
+    by="mrp",
+    ascending=False
+).head(10)
+
+print(top_mrp_products[["name", "Category", "mrp"]])
