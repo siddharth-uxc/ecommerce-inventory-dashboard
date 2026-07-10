@@ -228,3 +228,36 @@ print(average_selling_price)
 
 
 
+
+
+
+# ==================================================
+# EDA 7 : TOP 10 HIGHEST DISCOUNTED PRODUCTS
+# Find the top 10 products with the highest
+# discount percentage.
+#
+# This helps identify products offering the
+# biggest discounts to customers.
+# ==================================================
+
+print("\n" + "=" * 50)
+print("TOP 10 HIGHEST DISCOUNTED PRODUCTS")
+print("=" * 50)
+
+top_discount_products = df.nlargest(10, "discountPercent")
+
+
+print(
+    top_discount_products[
+        [
+            "name",
+            "Category",
+            "mrp",
+            "discountedSellingPrice",
+            "discountPercent",
+        ]
+    ]
+)
+
+
+
