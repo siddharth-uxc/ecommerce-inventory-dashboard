@@ -1,10 +1,9 @@
 print("\n" + "=" * 50)
-print("TOP 10 PRODUCTS BY MRP")
+print("OUT OF STOCK PRODUCTS BY CATEGORY")
 print("=" * 50)
 
-top_mrp_products = df.sort_values(
-    by="mrp",
-    ascending=False
-).head(10)
+out_of_stock = df[df["outOfStock"] == True]
 
-print(top_mrp_products[["name", "Category", "mrp"]])
+out_of_stock_count = out_of_stock.groupby("Category").size()
+
+print(out_of_stock_count.sort_values(ascending=False))
