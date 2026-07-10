@@ -260,4 +260,30 @@ print(
 )
 
 
+# ==================================================
+# EDA 9 : PRODUCTS WITH NO DISCOUNT
+# Find all products that have no discount.
+#
+# This helps identify products that are sold
+# at their original MRP without any offers.
+# ==================================================
 
+print("\n" + "=" * 50)
+print("PRODUCTS WITH NO DISCOUNT")
+print("=" * 50)
+
+no_discount_products = df[df["discountPercent"] == 0]
+
+print("Total product with no discount:",len(no_discount_products))
+
+print(
+    no_discount_products[
+        [
+            "name",
+            "Category",
+            "mrp",
+            "discountedSellingPrice",
+            "discountPercent",
+        ]
+    ]
+)
