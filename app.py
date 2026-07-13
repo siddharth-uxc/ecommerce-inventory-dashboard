@@ -287,3 +287,31 @@ print(
         ]
     ]
 )
+
+
+# ==================================================
+# EDA 10 : LOW STOCK PRODUCTS
+# Find products having very low stock.
+#
+# Products with available quantity less than or
+# equal to 3 are considered low stock.
+# ==================================================
+
+print("\n" + "=" * 50)
+print("LOW STOCK PRODUCTS")
+print("=" * 50)
+
+low_stock_products = df[df["availableQuantity"] <= 3]
+
+print("Total Low Stock Products:", len(low_stock_products))
+
+print(
+    low_stock_products[
+        [
+            "name",
+            "Category",
+            "availableQuantity",
+            "outOfStock",
+        ]
+    ].head(20)
+)
