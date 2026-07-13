@@ -1,9 +1,18 @@
-print("\n" + "=" * 50)
-print("OUT OF STOCK PRODUCTS BY CATEGORY")
-print("=" * 50)
+fig = px.bar(
+    x=category_counts.index,
+    y=category_counts.values,
+    title="Product Count by Category",
+    labels={
+        "x": "Category",
+        "y": "Number of Products"
+    },
+    text=category_counts.values
+)
 
-out_of_stock = df[df["outOfStock"] == True]
+fig.update_layout(
+    xaxis_title="Category",
+    yaxis_title="Number of Products",
+    title_x=0.5
+)
 
-out_of_stock_count = out_of_stock.groupby("Category").size()
-
-print(out_of_stock_count.sort_values(ascending=False))
+fig.show()

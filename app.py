@@ -343,3 +343,24 @@ fig.update_layout(
 
 fig.show()
 
+
+
+# ==================================================
+# VISUALIZATION 2 : OUT OF STOCK DISTRIBUTION
+# Create a pie chart showing the proportion of
+# in-stock and out-of-stock products.
+# ==================================================
+
+stock_status = df["outOfStock"].value_counts()
+
+fig = px.pie(
+    values=stock_status.values,
+    names=["In Stock", "Out of Stock"],
+    title="Out of Stock Distribution"
+)
+
+fig.update_traces(textinfo="percent+label")
+
+fig.update_layout(title_x=0.5)
+
+fig.show()
