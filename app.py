@@ -1,4 +1,5 @@
 import pandas as pd
+import plotly.express as px
 
 # ==================================================
 # LOAD THE CLEANED DATASET
@@ -315,3 +316,30 @@ print(
         ]
     ].head(20)
 )
+
+
+# ==================================================
+# VISUALIZATION 1 : PRODUCT COUNT BY CATEGORY
+# Create an interactive bar chart showing the
+# number of products in each category.
+# ==================================================
+
+fig = px.bar(
+    x=category_counts.index,
+    y=category_counts.values,
+    title="Product Count by Category",
+    labels={
+        "x": "Category",
+        "y": "Number of Products"
+    },
+    text=category_counts.values
+)
+
+fig.update_layout(
+    xaxis_title="Category",
+    yaxis_title="Number of Products",
+    title_x=0.5
+)
+
+fig.show()
+
