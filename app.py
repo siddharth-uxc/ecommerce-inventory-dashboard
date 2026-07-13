@@ -364,3 +364,35 @@ fig.update_traces(textinfo="percent+label")
 fig.update_layout(title_x=0.5)
 
 fig.show()
+
+
+
+
+# ==================================================
+# VISUALIZATION 3 : AVERAGE SELLING PRICE BY CATEGORY
+# Create a horizontal bar chart showing the average
+# discounted selling price for each product category.
+#
+# This helps identify premium and budget-friendly
+# product categories.
+# ==================================================
+
+fig = px.bar(
+    x=average_selling_price.values,
+    y=average_selling_price.index,
+    orientation="h",
+    title="Average Selling Price by Category",
+    labels={
+        "x": "Average Selling Price",
+        "y": "Category"
+    },
+    text=average_selling_price.values,
+    color=average_selling_price.values,
+    color_continuous_scale="Blues"
+)
+
+fig.update_layout(
+    title_x=0.5
+)
+
+fig.show()
