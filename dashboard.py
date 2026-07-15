@@ -44,14 +44,13 @@ show_out_of_stock = st.sidebar.checkbox(
     "Show only Out of Stock products"
 )
 
-# Search Product Filter
+# Search Product
 search_product = st.sidebar.text_input(
     "Search Product"
 )
 
 # ==================================================
 # FILTER DATA
-# Apply all filters one by one.
 # ==================================================
 
 # Category Filter
@@ -78,7 +77,6 @@ if search_product:
 
 # ==================================================
 # KPI CALCULATIONS
-# Calculate important business metrics.
 # ==================================================
 
 total_products = len(filtered_df)
@@ -119,7 +117,8 @@ col4.metric(
 )
 
 # ==================================================
-# PRODUCT COUNT BY CATEGORY
+# CHART 1 : PRODUCT COUNT BY CATEGORY
+# Count the number of products in each category.
 # ==================================================
 
 category_count = (
@@ -133,11 +132,7 @@ category_count.columns = [
     "Product Count"
 ]
 
-# ==================================================
-# BAR CHART
-# ==================================================
-
-fig = px.bar(
+fig1 = px.bar(
     category_count,
     x="Product Count",
     y="Category",
@@ -146,12 +141,113 @@ fig = px.bar(
 )
 
 st.plotly_chart(
-    fig,
+    fig1,
     use_container_width=True
 )
 
 # ==================================================
+# CHART 2 : AVERAGE SELLING PRICE BY CATEGORY
+# Calculate the average selling price of products
+# in each category.
+#
+# This helps identify which categories have the
+# highest average selling price.
+# ==================================================
+
+average_price = (
+    filtered_df.groupby("Category")["discountedSellingPrice"]
+    .mean()
+    .round(2)
+    .reset_index()
+)
+
+fig2 = px.bar(
+    average_price,
+    x="Category",
+    y="discountedSellingPrice",
+    title="Average Selling Price by Category"
+)
+
+st.plotly_chart(
+    fig2,
+    use_container_width=True
+)
+
+# ==================================================
+# CHART 3 : STOCK AVAILABILITY
+# Count products that are In Stock and Out of Stock.
+#
+# This helps understand overall inventory status.
+# ==================================================
+
+stock_status = (
+    filtered_df["outOfStock"]
+    .value_counts()
+    .reset_index()
+)
+
+stock_status.columns = [
+    "Stock Status",
+    "Count"
+]
+
+stock_status["Stock Status"] = stock_status[
+    "Stock Status"
+].replace({
+    True: "Out of Stock",
+    False: "In Stock"
+})
+
+fig3 = px.pie(
+    stock_status,
+    names="Stock Status",
+    values="Count",
+    title="Stock Availability"
+)
+
+st.plotly_chart(
+    fig3,
+    use_container_width=True
+)
+
+
+
+# ==================================================
+# CHART 4 : TOP 10 HIGHEST DISCOUNT PRODUCTS
+#
+# Display products offering the highest discount.
+#
+# This helps identify products with aggressive
+# promotional pricing.
+# ==================================================
+
+top_discount_products = (
+    filtered_df
+    .sort_values(
+        by="discountPercent",
+        ascending=False
+    )
+    .head(10)
+)
+
+fig4 = px.bar(
+    top_discount_products,
+    x="discountPercent",
+    y="name",
+    orientation="h",
+    title="Top 10 Highest Discount Products"
+)
+st.plotly_chart(
+    fig4,
+    use_container_width=True
+)
+
+
+
+
+# ==================================================
 # DATASET PREVIEW
+# Display the filtered dataset.
 # ==================================================
 
 st.subheader("Dataset Preview")
