@@ -28,6 +28,8 @@ st.write("Detailed business insights and analytics.")
 # ==================================================
 
 df = pd.read_csv("data/zepto_cleaned.csv")
+
+
 # ==================================================
 # SIDEBAR FILTERS
 # ==================================================
@@ -35,7 +37,6 @@ df = pd.read_csv("data/zepto_cleaned.csv")
 st.sidebar.header("🔍 Analytics Filters")
 
 
-# Category Filter
 category_filter = st.sidebar.multiselect(
     "Select Category",
     options=df["Category"].unique(),
@@ -43,10 +44,6 @@ category_filter = st.sidebar.multiselect(
 )
 
 
-
-
-
-# Discount Filter
 discount_filter = st.sidebar.slider(
     "Discount Range",
     min_value=float(df["discountPercent"].min()),
@@ -67,15 +64,20 @@ filtered_df = df[
         discount_filter[1]
     ))
 ]
+
+
 if filtered_df.empty:
     st.warning("No products match your selected filters.")
     st.stop()
+
+
 
 # ==================================================
 # KPI CARDS
 # ==================================================
 
 st.subheader("📌 Business Overview")
+
 
 col1, col2, col3, col4 = st.columns(4)
 
@@ -107,235 +109,246 @@ with col4:
         len(filtered_df[filtered_df["quantity"] < 10])
     )
 
+
+
 # ==================================================
-# TOP 10 MOST EXPENSIVE PRODUCTS
+# ANALYTICS TABS
 # ==================================================
 
-st.subheader("🏆 Top 10 Most Expensive Products")
+tab1, tab2, tab3 = st.tabs(
+    [
+        "📦 Inventory",
+        "💰 Revenue",
+        "📈 Product Insights"
+    ]
+)
 
 
-top_products = (
-    filtered_df.sort_values(
-        by="mrp",
-        ascending=False
+
+# ==================================================
+# INVENTORY TAB
+# ==================================================
+
+with tab1:
+
+    st.subheader("📦 Stock Analysis by Category")
+
+
+    stock_category = (
+        filtered_df.groupby("Category")["quantity"]
+        .sum()
+        .reset_index()
     )
-    .head(10)
-)
 
 
-fig = px.bar(
-    top_products,
-    x="mrp",
-    y="name",
-    orientation="h",
-    title="Top 10 Most Expensive Products"
-)
-
-
-st.plotly_chart(
-    fig,
-    use_container_width=True
-)
-
-
-# ==================================================
-# AVERAGE DISCOUNT BY CATEGORY
-# ==================================================
-
-st.subheader("📉 Average Discount by Category")
-
-
-average_discount = (
-    filtered_df.groupby("Category")["discountPercent"]
-    .mean()
-    .round(2)
-    .reset_index()
-)
-
-
-fig2 = px.bar(
-    average_discount,
-    x="discountPercent",
-    y="Category",
-    orientation="h",
-    title="Average Discount by Category"
-)
-
-
-st.plotly_chart(
-    fig2,
-    use_container_width=True
-)
-
-
-# ==================================================
-# NUMBER OF PRODUCTS BY CATEGORY
-# ==================================================
-
-st.subheader("📦 Number of Products by Category")
-
-
-category_count = (
-    filtered_df.groupby("Category")["name"]
-    .count()
-    .reset_index()
-    .rename(
-        columns={
-            "name": "Product Count"
-        }
+    fig1 = px.bar(
+        stock_category,
+        x="Category",
+        y="quantity",
+        title="Total Stock Available by Category"
     )
-)
 
 
-fig3 = px.bar(
-    category_count,
-    x="Category",
-    y="Product Count",
-    title="Products Available in Each Category"
-)
-
-
-st.plotly_chart(
-    fig3,
-    use_container_width=True
-)
-
-
-# ==================================================
-# STOCK ANALYSIS
-# ==================================================
-
-st.subheader("📦 Stock Analysis by Category")
-
-
-stock_category = (
-    filtered_df.groupby("Category")["quantity"]
-    .sum()
-    .reset_index()
-)
-
-
-fig4 = px.bar(
-    stock_category,
-    x="Category",
-    y="quantity",
-    title="Total Stock Available by Category"
-)
-
-
-st.plotly_chart(
-    fig4,
-    use_container_width=True
-)
-
-# ==================================================
-# REVENUE ANALYSIS
-# ==================================================
-
-st.subheader("💰 Estimated Revenue by Category")
-
-
-# Calculate revenue
-filtered_df["revenue"] = (
-    filtered_df["mrp"] *
-    (1 - filtered_df["discountPercent"] / 100) *
-    filtered_df["quantity"]
-)
-
-
-revenue_category = (
-    filtered_df.groupby("Category")["revenue"]
-    .sum()
-    .reset_index()
-)
-
-
-fig5 = px.bar(
-    revenue_category,
-    x="Category",
-    y="revenue",
-    title="Estimated Revenue by Category"
-)
-
-
-st.plotly_chart(
-    fig5,
-    use_container_width=True
-)
-
-# ==================================================
-# DISCOUNT IMPACT ANALYSIS
-# ==================================================
-
-st.subheader("📊 Discount vs Product Price")
-
-
-fig6 = px.scatter(
-    filtered_df,
-    x="mrp",
-    y="discountPercent",
-    hover_name="name",
-    title="MRP vs Discount Percentage"
-)
-
-
-st.plotly_chart(
-    fig6,
-    use_container_width=True
-)
-
-
-# ==================================================
-# BEST DISCOUNTED PRODUCTS
-# ==================================================
-
-st.subheader("🏷️ Highest Discounted Products")
-
-
-best_discount = (
-    filtered_df.sort_values(
-        by="discountPercent",
-        ascending=False
+    st.plotly_chart(
+        fig1,
+        use_container_width=True
     )
-    .head(10)
-)
 
 
-st.dataframe(
-    best_discount[
-        [
-            "name",
-            "Category",
-            "discountPercent",
-            "mrp"
-        ]
-    ],
-    use_container_width=True
-)
-
-# ==================================================
-# LOW STOCK PRODUCTS
-# ==================================================
-
-st.subheader("⚠️ Low Stock Products")
+    st.subheader("⚠️ Low Stock Products")
 
 
-low_stock = (
-    filtered_df[filtered_df["quantity"] < 10]
-    .sort_values(
-        by="quantity"
+    low_stock = (
+        filtered_df[filtered_df["quantity"] < 10]
+        .sort_values(
+            by="quantity"
+        )
     )
-)
 
 
-st.dataframe(
-    low_stock[
-        [
-            "name",
-            "Category",
-            "quantity"
-        ]
-    ],
-    use_container_width=True
-)
+    st.dataframe(
+        low_stock[
+            [
+                "name",
+                "Category",
+                "quantity"
+            ]
+        ],
+        use_container_width=True
+    )
 
+
+
+# ==================================================
+# REVENUE TAB
+# ==================================================
+
+with tab2:
+
+
+    st.subheader("💰 Estimated Revenue by Category")
+
+
+    filtered_df["revenue"] = (
+        filtered_df["mrp"] *
+        (1 - filtered_df["discountPercent"] / 100) *
+        filtered_df["quantity"]
+    )
+
+
+    revenue_category = (
+        filtered_df.groupby("Category")["revenue"]
+        .sum()
+        .reset_index()
+    )
+
+
+    fig2 = px.bar(
+        revenue_category,
+        x="Category",
+        y="revenue",
+        title="Estimated Revenue by Category"
+    )
+
+
+    st.plotly_chart(
+        fig2,
+        use_container_width=True
+    )
+
+
+
+    st.subheader("📊 Discount vs Product Price")
+
+
+    fig3 = px.scatter(
+        filtered_df,
+        x="mrp",
+        y="discountPercent",
+        hover_name="name",
+        title="MRP vs Discount Percentage"
+    )
+
+
+    st.plotly_chart(
+        fig3,
+        use_container_width=True
+    )
+
+
+
+    st.subheader("🏷️ Highest Discounted Products")
+
+
+    best_discount = (
+        filtered_df.sort_values(
+            by="discountPercent",
+            ascending=False
+        )
+        .head(10)
+    )
+
+
+    st.dataframe(
+        best_discount[
+            [
+                "name",
+                "Category",
+                "discountPercent",
+                "mrp"
+            ]
+        ],
+        use_container_width=True
+    )
+
+
+
+# ==================================================
+# PRODUCT INSIGHTS TAB
+# ==================================================
+
+with tab3:
+
+
+    st.subheader("🏆 Top 10 Most Expensive Products")
+
+
+    top_products = (
+        filtered_df.sort_values(
+            by="mrp",
+            ascending=False
+        )
+        .head(10)
+    )
+
+
+    fig4 = px.bar(
+        top_products,
+        x="mrp",
+        y="name",
+        orientation="h",
+        title="Top 10 Most Expensive Products"
+    )
+
+
+    st.plotly_chart(
+        fig4,
+        use_container_width=True
+    )
+
+
+
+    st.subheader("📉 Average Discount by Category")
+
+
+    average_discount = (
+        filtered_df.groupby("Category")["discountPercent"]
+        .mean()
+        .round(2)
+        .reset_index()
+    )
+
+
+    fig5 = px.bar(
+        average_discount,
+        x="discountPercent",
+        y="Category",
+        orientation="h",
+        title="Average Discount by Category"
+    )
+
+
+    st.plotly_chart(
+        fig5,
+        use_container_width=True
+    )
+
+
+
+    st.subheader("📦 Number of Products by Category")
+
+
+    category_count = (
+        filtered_df.groupby("Category")["name"]
+        .count()
+        .reset_index()
+        .rename(
+            columns={
+                "name": "Product Count"
+            }
+        )
+    )
+
+
+    fig6 = px.bar(
+        category_count,
+        x="Category",
+        y="Product Count",
+        title="Products Available in Each Category"
+    )
+
+
+    st.plotly_chart(
+        fig6,
+        use_container_width=True
+    )
