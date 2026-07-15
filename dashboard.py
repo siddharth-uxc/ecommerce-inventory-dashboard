@@ -53,19 +53,16 @@ search_product = st.sidebar.text_input(
 # FILTER DATA
 # ==================================================
 
-# Category Filter
 if selected_category == "All":
     filtered_df = df
 else:
     filtered_df = df[df["Category"] == selected_category]
 
-# Out of Stock Filter
 if show_out_of_stock:
     filtered_df = filtered_df[
         filtered_df["outOfStock"] == True
     ]
 
-# Search Filter
 if search_product:
     filtered_df = filtered_df[
         filtered_df["name"].str.contains(
@@ -118,7 +115,6 @@ col4.metric(
 
 # ==================================================
 # CHART 1 : PRODUCT COUNT BY CATEGORY
-# Count the number of products in each category.
 # ==================================================
 
 category_count = (
@@ -140,18 +136,8 @@ fig1 = px.bar(
     title="Products Available in Each Category"
 )
 
-st.plotly_chart(
-    fig1,
-    use_container_width=True
-)
-
 # ==================================================
 # CHART 2 : AVERAGE SELLING PRICE BY CATEGORY
-# Calculate the average selling price of products
-# in each category.
-#
-# This helps identify which categories have the
-# highest average selling price.
 # ==================================================
 
 average_price = (
@@ -163,21 +149,32 @@ average_price = (
 
 fig2 = px.bar(
     average_price,
-    x="Category",
-    y="discountedSellingPrice",
+    x="discountedSellingPrice",
+    y="Category",
+    orientation="h",
     title="Average Selling Price by Category"
 )
 
-st.plotly_chart(
-    fig2,
-    use_container_width=True
-)
+# ==================================================
+# FIRST ROW OF CHARTS
+# ==================================================
+
+chart_col1, chart_col2 = st.columns(2)
+
+with chart_col1:
+    st.plotly_chart(
+        fig1,
+        use_container_width=True
+    )
+
+with chart_col2:
+    st.plotly_chart(
+        fig2,
+        use_container_width=True
+    )
 
 # ==================================================
 # CHART 3 : STOCK AVAILABILITY
-# Count products that are In Stock and Out of Stock.
-#
-# This helps understand overall inventory status.
 # ==================================================
 
 stock_status = (
@@ -205,20 +202,8 @@ fig3 = px.pie(
     title="Stock Availability"
 )
 
-st.plotly_chart(
-    fig3,
-    use_container_width=True
-)
-
-
-
 # ==================================================
 # CHART 4 : TOP 10 HIGHEST DISCOUNT PRODUCTS
-#
-# Display products offering the highest discount.
-#
-# This helps identify products with aggressive
-# promotional pricing.
 # ==================================================
 
 top_discount_products = (
@@ -237,17 +222,27 @@ fig4 = px.bar(
     orientation="h",
     title="Top 10 Highest Discount Products"
 )
-st.plotly_chart(
-    fig4,
-    use_container_width=True
-)
 
+# ==================================================
+# SECOND ROW OF CHARTS
+# ==================================================
 
+chart_col3, chart_col4 = st.columns(2)
 
+with chart_col3:
+    st.plotly_chart(
+        fig3,
+        use_container_width=True
+    )
+
+with chart_col4:
+    st.plotly_chart(
+        fig4,
+        use_container_width=True
+    )
 
 # ==================================================
 # DATASET PREVIEW
-# Display the filtered dataset.
 # ==================================================
 
 st.subheader("Dataset Preview")
