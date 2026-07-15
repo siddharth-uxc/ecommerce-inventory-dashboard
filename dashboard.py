@@ -48,6 +48,22 @@ show_out_of_stock = st.sidebar.checkbox(
 search_product = st.sidebar.text_input(
     "Search Product"
 )
+# ==================================================
+# SORT PRODUCTS
+# Allow users to sort the filtered dataset.
+# ==================================================
+
+sort_option = st.sidebar.selectbox(
+    "Sort Products",
+    (
+        "Default",
+        "Highest Price",
+        "Lowest Price",
+        "Highest Discount",
+        "Product Name (A-Z)"
+    )
+)
+
 
 # ==================================================
 # FILTER DATA
@@ -71,6 +87,33 @@ if search_product:
             na=False
         )
     ]
+
+# ==================================================
+# APPLY SORTING
+# ==================================================
+
+if sort_option == "Highest Price":
+    filtered_df = filtered_df.sort_values(
+        by="discountedSellingPrice",
+        ascending=False
+    )
+
+elif sort_option == "Lowest Price":
+    filtered_df = filtered_df.sort_values(
+        by="discountedSellingPrice",
+        ascending=True
+    )
+
+elif sort_option == "Highest Discount":
+    filtered_df = filtered_df.sort_values(
+        by="discountPercent",
+        ascending=False
+    )
+
+elif sort_option == "Product Name (A-Z)":
+    filtered_df = filtered_df.sort_values(
+        by="name"
+    )
 
 # ==================================================
 # KPI CALCULATIONS
