@@ -28,7 +28,48 @@ st.write("Detailed business insights and analytics.")
 # ==================================================
 
 df = pd.read_csv("data/zepto_cleaned.csv")
+# ==================================================
+# SIDEBAR FILTERS
+# ==================================================
 
+st.sidebar.header("🔍 Analytics Filters")
+
+
+# Category Filter
+category_filter = st.sidebar.multiselect(
+    "Select Category",
+    options=df["Category"].unique(),
+    default=df["Category"].unique()
+)
+
+
+
+
+
+# Discount Filter
+discount_filter = st.sidebar.slider(
+    "Discount Range",
+    min_value=float(df["discountPercent"].min()),
+    max_value=float(df["discountPercent"].max()),
+    value=(
+        float(df["discountPercent"].min()),
+        float(df["discountPercent"].max())
+    )
+)
+
+
+# Apply Filters
+
+filtered_df = df[
+    (df["Category"].isin(category_filter)) &
+    (df["discountPercent"].between(
+        discount_filter[0],
+        discount_filter[1]
+    ))
+]
+if filtered_df.empty:
+    st.warning("No products match your selected filters.")
+    st.stop()
 
 # ==================================================
 # KPI CARDS
@@ -42,30 +83,29 @@ col1, col2, col3, col4 = st.columns(4)
 with col1:
     st.metric(
         "Total Products",
-        df["name"].nunique()
+        filtered_df["name"].nunique()
     )
 
 
 with col2:
     st.metric(
         "Total Stock",
-        df["quantity"].sum()
+        filtered_df["quantity"].sum()
     )
 
 
 with col3:
     st.metric(
         "Average Discount",
-        f"{df['discountPercent'].mean():.2f}%"
+        f"{filtered_df['discountPercent'].mean():.2f}%"
     )
 
 
 with col4:
     st.metric(
         "Low Stock Items",
-        len(df[df["quantity"] < 10])
+        len(filtered_df[filtered_df["quantity"] < 10])
     )
-
 
 # ==================================================
 # TOP 10 MOST EXPENSIVE PRODUCTS
@@ -75,7 +115,7 @@ st.subheader("🏆 Top 10 Most Expensive Products")
 
 
 top_products = (
-    df.sort_values(
+    filtered_df.sort_values(
         by="mrp",
         ascending=False
     )
@@ -106,7 +146,7 @@ st.subheader("📉 Average Discount by Category")
 
 
 average_discount = (
-    df.groupby("Category")["discountPercent"]
+    filtered_df.groupby("Category")["discountPercent"]
     .mean()
     .round(2)
     .reset_index()
@@ -136,7 +176,7 @@ st.subheader("📦 Number of Products by Category")
 
 
 category_count = (
-    df.groupby("Category")["name"]
+    filtered_df.groupby("Category")["name"]
     .count()
     .reset_index()
     .rename(
@@ -169,7 +209,7 @@ st.subheader("📦 Stock Analysis by Category")
 
 
 stock_category = (
-    df.groupby("Category")["quantity"]
+    filtered_df.groupby("Category")["quantity"]
     .sum()
     .reset_index()
 )
@@ -197,7 +237,7 @@ st.subheader("⚠️ Low Stock Products")
 
 
 low_stock = (
-    df[df["quantity"] < 10]
+    filtered_df[filtered_df["quantity"] < 10]
     .sort_values(
         by="quantity"
     )
@@ -214,3 +254,4 @@ st.dataframe(
     ],
     use_container_width=True
 )
+
