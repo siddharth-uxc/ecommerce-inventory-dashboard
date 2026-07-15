@@ -228,6 +228,90 @@ st.plotly_chart(
     use_container_width=True
 )
 
+# ==================================================
+# REVENUE ANALYSIS
+# ==================================================
+
+st.subheader("💰 Estimated Revenue by Category")
+
+
+# Calculate revenue
+filtered_df["revenue"] = (
+    filtered_df["mrp"] *
+    (1 - filtered_df["discountPercent"] / 100) *
+    filtered_df["quantity"]
+)
+
+
+revenue_category = (
+    filtered_df.groupby("Category")["revenue"]
+    .sum()
+    .reset_index()
+)
+
+
+fig5 = px.bar(
+    revenue_category,
+    x="Category",
+    y="revenue",
+    title="Estimated Revenue by Category"
+)
+
+
+st.plotly_chart(
+    fig5,
+    use_container_width=True
+)
+
+# ==================================================
+# DISCOUNT IMPACT ANALYSIS
+# ==================================================
+
+st.subheader("📊 Discount vs Product Price")
+
+
+fig6 = px.scatter(
+    filtered_df,
+    x="mrp",
+    y="discountPercent",
+    hover_name="name",
+    title="MRP vs Discount Percentage"
+)
+
+
+st.plotly_chart(
+    fig6,
+    use_container_width=True
+)
+
+
+# ==================================================
+# BEST DISCOUNTED PRODUCTS
+# ==================================================
+
+st.subheader("🏷️ Highest Discounted Products")
+
+
+best_discount = (
+    filtered_df.sort_values(
+        by="discountPercent",
+        ascending=False
+    )
+    .head(10)
+)
+
+
+st.dataframe(
+    best_discount[
+        [
+            "name",
+            "Category",
+            "discountPercent",
+            "mrp"
+        ]
+    ],
+    use_container_width=True
+)
 
 # ==================================================
 # LOW STOCK PRODUCTS
