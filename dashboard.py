@@ -4,6 +4,7 @@ import plotly.express as px
 
 # ==================================================
 # PAGE CONFIGURATION
+# Configure the dashboard page.
 # ==================================================
 
 st.set_page_config(
@@ -28,8 +29,9 @@ df = pd.read_csv("data/zepto_cleaned.csv")
 # SIDEBAR FILTERS
 # ==================================================
 
-st.sidebar.header("Filters")
+st.sidebar.header("🔍 Dashboard Filters")
 
+# Category Filter
 categories = sorted(df["Category"].unique())
 
 selected_category = st.sidebar.selectbox(
@@ -37,27 +39,46 @@ selected_category = st.sidebar.selectbox(
     ["All"] + list(categories)
 )
 
+# Out of Stock Filter
 show_out_of_stock = st.sidebar.checkbox(
     "Show only Out of Stock products"
 )
 
+# Search Product Filter
+search_product = st.sidebar.text_input(
+    "Search Product"
+)
+
 # ==================================================
 # FILTER DATA
+# Apply all filters one by one.
 # ==================================================
 
+# Category Filter
 if selected_category == "All":
     filtered_df = df
 else:
     filtered_df = df[df["Category"] == selected_category]
 
-# Apply Out of Stock filter
+# Out of Stock Filter
 if show_out_of_stock:
     filtered_df = filtered_df[
         filtered_df["outOfStock"] == True
     ]
 
+# Search Filter
+if search_product:
+    filtered_df = filtered_df[
+        filtered_df["name"].str.contains(
+            search_product,
+            case=False,
+            na=False
+        )
+    ]
+
 # ==================================================
 # KPI CALCULATIONS
+# Calculate important business metrics.
 # ==================================================
 
 total_products = len(filtered_df)
@@ -77,11 +98,20 @@ average_selling_price = round(
 
 col1, col2, col3, col4 = st.columns(4)
 
-col1.metric("📦 Total Products", total_products)
+col1.metric(
+    "📦 Total Products",
+    total_products
+)
 
-col2.metric("📂 Categories", total_categories)
+col2.metric(
+    "📂 Categories",
+    total_categories
+)
 
-col3.metric("❌ Out of Stock", out_of_stock)
+col3.metric(
+    "❌ Out of Stock",
+    out_of_stock
+)
 
 col4.metric(
     "💰 Avg Selling Price",
