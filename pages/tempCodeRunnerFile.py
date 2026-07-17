@@ -1,1 +1,0 @@
-st.write(filtered_df.columns)

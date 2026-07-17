@@ -66,6 +66,19 @@ filtered_df = df[
 ]
 
 
+# ==================================================
+# CALCULATE REVENUE
+# ==================================================
+
+filtered_df = filtered_df.copy()
+
+filtered_df["revenue"] = (
+    filtered_df["mrp"] *
+    (1 - filtered_df["discountPercent"] / 100) *
+    filtered_df["quantity"]
+)
+
+
 if filtered_df.empty:
     st.warning("No products match your selected filters.")
     st.stop()
@@ -115,14 +128,11 @@ with col4:
 # ANALYTICS TABS
 # ==================================================
 
-tab1, tab2, tab3 = st.tabs(
-    [
-        "📦 Inventory",
-        "💰 Revenue",
-        "📈 Product Insights"
-    ]
-)
-
+tab1, tab2, tab3 = st.tabs([
+    "📦 Stock",
+    "💰 Revenue",
+    "📈 Insights"
+])
 
 
 # ==================================================
@@ -189,11 +199,7 @@ with tab2:
     st.subheader("💰 Estimated Revenue by Category")
 
 
-    filtered_df["revenue"] = (
-        filtered_df["mrp"] *
-        (1 - filtered_df["discountPercent"] / 100) *
-        filtered_df["quantity"]
-    )
+
 
 
     revenue_category = (
@@ -350,5 +356,39 @@ with tab3:
 
     st.plotly_chart(
         fig6,
+        use_container_width=True
+    )
+
+
+
+
+    
+
+  
+
+    # ==================================================
+    # CORRELATION HEATMAP
+    # ==================================================
+
+    st.subheader("🔥 Correlation Heatmap")
+
+    correlation = filtered_df[
+        [
+            "mrp",
+            "discountPercent",
+            "quantity",
+            "revenue"
+        ]
+    ].corr()
+
+    fig7 = px.imshow(
+        correlation,
+        text_auto=".2f",
+        color_continuous_scale="Viridis",
+        title="Correlation Between Numeric Features"
+    )
+
+    st.plotly_chart(
+        fig7,
         use_container_width=True
     )
