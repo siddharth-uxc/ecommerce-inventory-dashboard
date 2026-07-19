@@ -16,10 +16,7 @@ st.set_page_config(
 
 st.title("ℹ️ About This Project")
 
-st.write(
-    "Learn more about the Zepto Inventory Dashboard."
-)
-
+st.markdown("---")
 
 # ==================================================
 # PROJECT OVERVIEW
@@ -28,31 +25,44 @@ st.write(
 st.header("📌 Project Overview")
 
 st.write("""
-The Zepto Inventory Dashboard is an interactive business intelligence
-application developed using Python, Pandas, Plotly, and Streamlit.
+The Zepto Inventory Dashboard is a data analytics and inventory
+management application built using Python and Streamlit.
 
-The dashboard helps analyze inventory, monitor stock levels,
-track discounts, estimate revenue, and gain business insights
-through interactive visualizations.
+The dashboard helps businesses monitor inventory levels,
+analyze product pricing, track discounts, identify low-stock
+items, and gain valuable business insights through interactive
+visualizations.
 """)
-
 
 # ==================================================
 # FEATURES
 # ==================================================
 
-st.header("🚀 Features")
+st.header("🚀 Key Features")
 
 st.markdown("""
-- 📊 Interactive Dashboard
-- 📦 Inventory Management
-- 🔍 Product Search
-- 📂 Category Filters
-- 📉 Discount Analysis
-- 💰 Revenue Analysis
-- 🔥 Correlation Heatmap
-- 📥 CSV Export
-""")# ==================================================
+✅ Interactive Dashboard
+
+✅ Category Filtering
+
+✅ Product Search
+
+✅ Inventory Management
+
+✅ Revenue Analysis
+
+✅ Stock Availability Tracking
+
+✅ Heatmap Analysis
+
+✅ Top Discounted Products Analysis
+
+✅ Low Stock Monitoring
+
+✅ Downloadable Inventory Data
+""")
+
+# ==================================================
 # TECH STACK
 # ==================================================
 
@@ -61,60 +71,58 @@ st.header("🛠️ Technology Stack")
 st.markdown("""
 - Python
 - Pandas
-- Plotly
 - Streamlit
+- Plotly Express
 - Git & GitHub
 """)
 
-
 # ==================================================
-# DATASET
+# DATASET INFORMATION
 # ==================================================
 
-st.header("📂 Dataset Information")
+st.header("📊 Dataset Information")
 
 st.write("""
-Dataset Used: Zepto Inventory Dataset
+Dataset used: Zepto Product Inventory Dataset
 
-Contains product information including:
+The dataset contains product information such as:
 
-- Product Name
-- Category
-- MRP
-- Discount Percentage
-- Quantity Available
-- Stock Status
+• Product Name
+
+• Category
+
+• MRP
+
+• Discount Percentage
+
+• Selling Price
+
+• Quantity Available
+
+• Stock Availability
+
+The dataset was cleaned and analyzed using Pandas.
 """)
 
-
-
-
 # ==================================================
-# PROJECT STATISTICS
+# PROJECT MODULES
 # ==================================================
 
-st.header("📈 Project Statistics")
+st.header("📂 Project Modules")
 
-col1, col2, col3 = st.columns(3)
+st.markdown("""
+### 🏠 Dashboard
+Business overview and key performance indicators.
 
-with col1:
-    st.metric(
-        "Products",
-        "3730"
-    )
+### 📊 Analytics
+Advanced analytics, revenue insights, and heatmap analysis.
 
-with col2:
-    st.metric(
-        "Categories",
-        "14"
-    )
+### 📦 Inventory
+Inventory tracking, product search, and stock management.
 
-with col3:
-    st.metric(
-        "Dashboard Pages",
-        "4"
-    )
-
+### ℹ️ About
+Project documentation and information.
+""")
 
 # ==================================================
 # DEVELOPER
@@ -123,14 +131,22 @@ with col3:
 st.header("👨‍💻 Developer")
 
 st.write("""
-Developed by: Siddharth Jha
+Developed by Siddharth Jha
 
-BCA Student | Lovely Professional University
+Bachelor of Computer Applications (BCA)
 
-Passionate about Data Analytics, Python,
-and Business Intelligence.
+Lovely Professional University
 """)
 
+# ==================================================
+# GITHUB
+# ==================================================
+
+st.header("🔗 GitHub Repository")
+
+st.write(
+    "https://github.com/siddharth-uxc/ecommerce-inventory-dashboard"
+)
 
 # ==================================================
 # FUTURE ENHANCEMENTS
@@ -139,31 +155,16 @@ and Business Intelligence.
 st.header("🔮 Future Enhancements")
 
 st.markdown("""
-- 🌙 Dark Mode Support
-- 📱 Mobile Responsive Design
-- 🤖 AI-Based Inventory Predictions
-- 📊 Advanced Business Analytics
-- ☁️ Cloud Deployment
-- 🔔 Stock Alert System
+- Real-Time Inventory Updates
+- Machine Learning Forecasting
+- Supplier Management
+- Inventory Alerts
+- Sales Prediction Models
+- Cloud Database Integration
 """)
-
-
-
-# ==================================================
-# GITHUB
-# ==================================================
-
-st.header("🔗 Project Repository")
-
-st.markdown(
-    "[View Project on GitHub](https://github.com/siddharth-uxc/ecommerce-inventory-dashboard)"
-)
-
-
-
 
 st.markdown("---")
 
-st.caption(
-    "Zepto Inventory Dashboard • Built with Python, Pandas, Plotly & Streamlit"
+st.success(
+    "Thank you for exploring the Zepto Inventory Dashboard 🚀"
 )
