@@ -10,6 +10,41 @@ st.set_page_config(
     layout="wide"
 )
 
+st.markdown("""
+<style>
+
+.main-title{
+    text-align:center;
+    padding:20px;
+    border-radius:15px;
+    background: linear-gradient(135deg,#7c3aed,#4f46e5);
+    color:white;
+    margin-bottom:20px;
+}
+
+.feature-card{
+    background:#1E1E1E;
+    padding:15px;
+    border-radius:12px;
+    border:1px solid #333;
+    text-align:center;
+    margin:5px;
+}
+
+.feature-card:hover{
+    transform:translateY(-3px);
+}
+
+.tech-card{
+    background:#262730;
+    padding:12px;
+    border-radius:10px;
+    text-align:center;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
 # ==================================================
 # PAGE TITLE
 # ==================================================
@@ -40,27 +75,31 @@ visualizations.
 
 st.header("🚀 Key Features")
 
-st.markdown("""
-✅ Interactive Dashboard
+c1,c2,c3 = st.columns(3)
 
-✅ Category Filtering
+with c1:
+    st.markdown("""
+    <div class="feature-card">
+    <h4>📦 Inventory Tracking</h4>
+    <p>Monitor stock levels efficiently.</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-✅ Product Search
+with c2:
+    st.markdown("""
+    <div class="feature-card">
+    <h4>📊 Analytics</h4>
+    <p>Interactive business insights.</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-✅ Inventory Management
-
-✅ Revenue Analysis
-
-✅ Stock Availability Tracking
-
-✅ Heatmap Analysis
-
-✅ Top Discounted Products Analysis
-
-✅ Low Stock Monitoring
-
-✅ Downloadable Inventory Data
-""")
+with c3:
+    st.markdown("""
+    <div class="feature-card">
+    <h4>💰 Revenue Analysis</h4>
+    <p>Track revenue opportunities.</p>
+    </div>
+    """, unsafe_allow_html=True)
 
 # ==================================================
 # TECH STACK
@@ -68,13 +107,13 @@ st.markdown("""
 
 st.header("🛠️ Technology Stack")
 
-st.markdown("""
-- Python
-- Pandas
-- Streamlit
-- Plotly Express
-- Git & GitHub
-""")
+t1,t2,t3,t4,t5 = st.columns(5)
+
+t1.markdown('<div class="tech-card">🐍 Python</div>', unsafe_allow_html=True)
+t2.markdown('<div class="tech-card">📊 Pandas</div>', unsafe_allow_html=True)
+t3.markdown('<div class="tech-card">📈 Plotly</div>', unsafe_allow_html=True)
+t4.markdown('<div class="tech-card">⚡ Streamlit</div>', unsafe_allow_html=True)
+t5.markdown('<div class="tech-card">🌐 GitHub</div>', unsafe_allow_html=True)
 
 # ==================================================
 # DATASET INFORMATION
@@ -130,12 +169,12 @@ Project documentation and information.
 
 st.header("👨‍💻 Developer")
 
-st.write("""
-Developed by Siddharth Jha
+st.success("""
+Siddharth Jha
 
-Bachelor of Computer Applications (BCA)
+BCA Student - Lovely Professional University
 
-Lovely Professional University
+Python | Data Analytics | Web Development
 """)
 
 # ==================================================
@@ -167,4 +206,12 @@ st.markdown("---")
 
 st.success(
     "Thank you for exploring the Zepto Inventory Dashboard 🚀"
+)
+
+
+st.markdown("---")
+
+st.markdown(
+    "<h4 style='text-align:center;'>🚀 Built with Python, Pandas, Plotly & Streamlit</h4>",
+    unsafe_allow_html=True
 )
