@@ -4,7 +4,6 @@ import plotly.express as px
 
 # ==================================================
 # PAGE CONFIGURATION
-# Configure the dashboard page.
 # ==================================================
 
 st.set_page_config(
@@ -17,10 +16,18 @@ st.set_page_config(
 # DASHBOARD TITLE
 # ==================================================
 
-st.title("🛒 Zepto Inventory Dashboard")
+st.markdown("""
+# 🛒 Zepto Inventory Intelligence Dashboard
+
+### Real-Time Inventory & Business Analytics Platform
+""")
+
+st.info(
+    "📊 Monitor inventory • 💰 Analyze pricing • 📦 Track stock levels • 🚀 Business insights in real time"
+)
 
 # ==================================================
-# LOAD CLEANED DATASET
+# LOAD DATASET
 # ==================================================
 
 df = pd.read_csv("data/zepto_cleaned.csv")
@@ -31,7 +38,6 @@ df = pd.read_csv("data/zepto_cleaned.csv")
 
 st.sidebar.header("🔍 Dashboard Filters")
 
-# Category Filter
 categories = sorted(df["Category"].unique())
 
 selected_category = st.sidebar.selectbox(
@@ -39,19 +45,13 @@ selected_category = st.sidebar.selectbox(
     ["All"] + list(categories)
 )
 
-# Out of Stock Filter
 show_out_of_stock = st.sidebar.checkbox(
     "Show only Out of Stock products"
 )
 
-# Search Product
 search_product = st.sidebar.text_input(
     "Search Product"
 )
-# ==================================================
-# SORT PRODUCTS
-# Allow users to sort the filtered dataset.
-# ==================================================
 
 sort_option = st.sidebar.selectbox(
     "Sort Products",
@@ -64,15 +64,16 @@ sort_option = st.sidebar.selectbox(
     )
 )
 
-
 # ==================================================
 # FILTER DATA
 # ==================================================
 
 if selected_category == "All":
-    filtered_df = df
+    filtered_df = df.copy()
 else:
-    filtered_df = df[df["Category"] == selected_category]
+    filtered_df = df[
+        df["Category"] == selected_category
+    ]
 
 if show_out_of_stock:
     filtered_df = filtered_df[
@@ -131,33 +132,80 @@ average_selling_price = round(
 )
 
 # ==================================================
+# KPI CARDS CSS
+# ==================================================
+
+st.markdown("""
+<style>
+.card {
+    background: linear-gradient(
+        135deg,
+        #1E1E1E,
+        #2A2A2A
+    );
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    border: 1px solid #333;
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 20px rgba(124,58,237,0.5);
+}
+
+.card h3 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.card h1 {
+    margin-top: 10px;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# ==================================================
 # KPI CARDS
 # ==================================================
 
 col1, col2, col3, col4 = st.columns(4)
 
-col1.metric(
-    "📦 Total Products",
-    total_products
-)
+with col1:
+    st.markdown(f"""
+    <div class="card">
+        <h3>📦 Total Products</h3>
+        <h1>{total_products}</h1>
+    </div>
+    """, unsafe_allow_html=True)
 
-col2.metric(
-    "📂 Categories",
-    total_categories
-)
+with col2:
+    st.markdown(f"""
+    <div class="card">
+        <h3>📂 Categories</h3>
+        <h1>{total_categories}</h1>
+    </div>
+    """, unsafe_allow_html=True)
 
-col3.metric(
-    "❌ Out of Stock",
-    out_of_stock
-)
+with col3:
+    st.markdown(f"""
+    <div class="card">
+        <h3>❌ Out of Stock</h3>
+        <h1>{out_of_stock}</h1>
+    </div>
+    """, unsafe_allow_html=True)
 
-col4.metric(
-    "💰 Avg Selling Price",
-    f"₹{average_selling_price}"
-)
+with col4:
+    st.markdown(f"""
+    <div class="card">
+        <h3>💰 Avg Selling Price</h3>
+        <h1>₹{average_selling_price}</h1>
+    </div>
+    """, unsafe_allow_html=True)
 
 # ==================================================
-# CHART 1 : PRODUCT COUNT BY CATEGORY
+# CHART 1
 # ==================================================
 
 category_count = (
@@ -180,11 +228,13 @@ fig1 = px.bar(
 )
 
 # ==================================================
-# CHART 2 : AVERAGE SELLING PRICE BY CATEGORY
+# CHART 2
 # ==================================================
 
 average_price = (
-    filtered_df.groupby("Category")["discountedSellingPrice"]
+    filtered_df.groupby("Category")[
+        "discountedSellingPrice"
+    ]
     .mean()
     .round(2)
     .reset_index()
@@ -217,7 +267,7 @@ with chart_col2:
     )
 
 # ==================================================
-# CHART 3 : STOCK AVAILABILITY
+# CHART 3
 # ==================================================
 
 stock_status = (
@@ -231,12 +281,13 @@ stock_status.columns = [
     "Count"
 ]
 
-stock_status["Stock Status"] = stock_status[
-    "Stock Status"
-].replace({
-    True: "Out of Stock",
-    False: "In Stock"
-})
+stock_status["Stock Status"] = (
+    stock_status["Stock Status"]
+    .replace({
+        True: "Out of Stock",
+        False: "In Stock"
+    })
+)
 
 fig3 = px.pie(
     stock_status,
@@ -246,7 +297,7 @@ fig3 = px.pie(
 )
 
 # ==================================================
-# CHART 4 : TOP 10 HIGHEST DISCOUNT PRODUCTS
+# CHART 4
 # ==================================================
 
 top_discount_products = (
@@ -265,6 +316,16 @@ fig4 = px.bar(
     orientation="h",
     title="Top 10 Highest Discount Products"
 )
+
+# ==================================================
+# APPLY THEME TO ALL CHARTS
+# ==================================================
+
+for fig in [fig1, fig2, fig3, fig4]:
+    fig.update_layout(
+        template="plotly_dark",
+        height=450
+    )
 
 # ==================================================
 # SECOND ROW OF CHARTS
@@ -288,7 +349,7 @@ with chart_col4:
 # DATASET PREVIEW
 # ==================================================
 
-st.subheader("Dataset Preview")
+st.subheader("📋 Dataset Preview")
 
 st.dataframe(
     filtered_df[
@@ -300,5 +361,6 @@ st.dataframe(
             "discountPercent",
             "outOfStock"
         ]
-    ]
+    ],
+    use_container_width=True
 )

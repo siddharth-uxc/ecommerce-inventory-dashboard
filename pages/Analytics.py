@@ -18,10 +18,13 @@ st.set_page_config(
 # PAGE TITLE
 # ==================================================
 
-st.title("📊 Zepto Analytics")
+st.markdown("""
+# 🛒 Zepto Inventory Intelligence Dashboard
 
-st.write("Detailed business insights and analytics.")
+### Real-Time Inventory & Business Analytics System
 
+---
+""")
 
 # ==================================================
 # LOAD DATASET
