@@ -121,3 +121,17 @@ st.dataframe(
     ],
     use_container_width=True
 )
+
+
+# ==================================================
+# DOWNLOAD INVENTORY
+# ==================================================
+
+csv = filtered_df.to_csv(index=False)
+
+st.download_button(
+    label="📥 Download Inventory Data",
+    data=csv,
+    file_name="inventory_data.csv",
+    mime="text/csv"
+)
